@@ -52,5 +52,14 @@ class Booking(db.Model):
     def __repr__(self):
         return f"<Booking {self.order_number}>"
 
+class Payment(db.Model):
+    __tablename__ = 'payments'
 
+    id = db.Column(db.Integer, primary_key=True)
+    booking_id = db.Column(db.Integer, db.ForeignKey('bookings.id'), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    payment_method = db.Column(db.Integer, nullable=False)  # 1 = credit card, 2 = cash, 3 = special pay
+
+    def __repr__(self):
+        return f"<Payment {self.id}>"
 
