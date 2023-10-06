@@ -35,5 +35,22 @@ class Flight(db.Model):
     def __repr__(self):
         return f"<Flight {self.name}>"
 
+class Booking(db.Model):
+    __tablename__ = 'bookings'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    flight_id = db.Column(db.Integer, db.ForeignKey('flights.id'), nullable=False)
+    order_number = db.Column(db.String(20), unique=True, nullable=False)
+    flight_date = db.Column(db.Date, nullable=False)
+    airline = db.Column(db.String(100), nullable=False)
+    plane_model = db.Column(db.String(100), nullable=False)
+    seat_number = db.Column(db.String(10), nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    order_status = db.Column(db.Integer, nullable=False)  # 1 = complete, 2 = pending, 3 = cancelled
+
+    def __repr__(self):
+        return f"<Booking {self.order_number}>"
+
 
 
