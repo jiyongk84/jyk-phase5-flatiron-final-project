@@ -1,24 +1,43 @@
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.ext.associationproxy import association_proxy
 
-from config import db
+
+from config import db, bcrypt
 
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
-class User(db.Model):
+class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(255), nullable=False)
+    _password_hash = db.Column(db.String(255), nullable=False)  # Store the password hash
     first_name = db.Column(db.String(50), nullable=True)
     last_name = db.Column(db.String(50), nullable=True)
 
     def __repr__(self):
         return f"<User {self.username}>"
+
+    @property
+    def password(self):
+        raise AttributeError("Password is not readable")
+
+    @password.setter
+    def password(self, plaintext_password):
+        if not plaintext_password:
+            raise ValueError("Password cannot be empty")
+
+        hashed_password = bcrypt.hashpw(plaintext_password.encode('utf-8'), bcrypt.gensalt())
+        self._password_hash = hashed_password.decode('utf-8')
+
+    def check_password(self, password):
+        if not password:
+            raise ValueError("Password cannot be empty")
+
+        return bcrypt.checkpw(password.encode('utf-8'), self._password_hash.encode('utf-8'))
 
 class Flight(db.Model):
     __tablename__ = 'flights'
