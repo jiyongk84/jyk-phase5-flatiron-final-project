@@ -7,6 +7,7 @@ from flask_migrate import Migrate
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
+from flask_bcrypt import Bcrypt
 
 # Local imports
 
@@ -33,4 +34,6 @@ CORS(app)
 # @app.route("/")
 # def helloWorld():
 #   return "Hello, cross-origin-world!"
+
+bcrypt = Bcrypt(app)
 
