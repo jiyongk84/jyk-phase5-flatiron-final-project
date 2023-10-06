@@ -20,5 +20,20 @@ class User(db.Model):
     def __repr__(self):
         return f"<User {self.username}>"
 
+class Flight(db.Model):
+    __tablename__ = 'flights'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    airline = db.Column(db.String(100), nullable=False)
+    flight_date = db.Column(db.Date, nullable=False)
+    airport = db.Column(db.String(100), nullable=False)
+    city = db.Column(db.String(100), nullable=False)
+    state = db.Column(db.String(50), nullable=False)
+    price = db.Column(db.Float, nullable=False)
+
+    def __repr__(self):
+        return f"<Flight {self.name}>"
+
 
 
