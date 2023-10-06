@@ -39,6 +39,7 @@ class User(db.Model, SerializerMixin):
 
         return bcrypt.checkpw(password.encode('utf-8'), self._password_hash.encode('utf-8'))
 
+
 class Airport(db.Model, SerializerMixin):
     __tablename__ = 'airports'
 
