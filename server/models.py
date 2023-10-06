@@ -39,39 +39,56 @@ class User(db.Model, SerializerMixin):
 
         return bcrypt.checkpw(password.encode('utf-8'), self._password_hash.encode('utf-8'))
 
-class Flight(db.Model):
+class Airport(db.Model, SerializerMixin):
+    __tablename__ = 'airports'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    city = db.Column(db.String(100), nullable=False)
+    state = db.Column(db.String(50), nullable=False)
+
+    def __repr__(self):
+        return f"<Airport {self.name}>"
+
+class Flight(db.Model, SerializerMixin):
     __tablename__ = 'flights'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     airline = db.Column(db.String(100), nullable=False)
     flight_date = db.Column(db.Date, nullable=False)
-    airport = db.Column(db.String(100), nullable=False)
-    city = db.Column(db.String(100), nullable=False)
-    state = db.Column(db.String(50), nullable=False)
-    price = db.Column(db.Float, nullable=False)
+    departure_time = db.Column(db.Time, nullable=False)
+    destination_time = db.Column(db.Time, nullable=False)
+
+    # Establish a many-to-one relationship with the departure airport
+    departure_airport_id = db.Column(db.Integer, db.ForeignKey('airports.id'), nullable=False)
+    departure_airport = db.relationship('Airport', foreign_keys=[departure_airport_id], backref='departing_flights')
+
+    # Establish a many-to-one relationship with the destination airport
+    destination_airport_id = db.Column(db.Integer, db.ForeignKey('airports.id'), nullable=False)
+    destination_airport = db.relationship('Airport', foreign_keys=[destination_airport_id], backref='arriving_flights')
+
+    # Establish a one-to-many relationship with bookings
+    bookings = db.relationship('Booking', backref='flight', lazy=True)
 
     def __repr__(self):
         return f"<Flight {self.name}>"
 
-class Booking(db.Model):
+class Booking(db.Model, SerializerMixin):
     __tablename__ = 'bookings'
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     flight_id = db.Column(db.Integer, db.ForeignKey('flights.id'), nullable=False)
     order_number = db.Column(db.String(20), unique=True, nullable=False)
-    flight_date = db.Column(db.Date, nullable=False)
-    airline = db.Column(db.String(100), nullable=False)
-    plane_model = db.Column(db.String(100), nullable=False)
-    seat_number = db.Column(db.String(10), nullable=False)
+    seat_number = db.Column(db.String(10), nullable=False)  # Add seat_number field
     price = db.Column(db.Float, nullable=False)
     order_status = db.Column(db.Integer, nullable=False)  # 1 = complete, 2 = pending, 3 = cancelled
 
     def __repr__(self):
         return f"<Booking {self.order_number}>"
 
-class Payment(db.Model):
+class Payment(db.Model, SerializerMixin):
     __tablename__ = 'payments'
 
     id = db.Column(db.Integer, primary_key=True)
