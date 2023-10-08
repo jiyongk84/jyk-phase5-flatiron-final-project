@@ -18,7 +18,7 @@ class Signup(Resource):
         data = request.get_json()
 
         username = data.get('username')
-        password = data['password']
+        password = data.get('password')  # Get the password from the request data
         first_name = data.get('first_name')
         last_name = data.get('last_name')
         email = data.get('email')
@@ -26,14 +26,14 @@ class Signup(Resource):
         if not username or not password or not first_name or not last_name or not email:
             return {"error": "422 Unprocessable Entity"}, 422
 
+        # Create a new User instance with the provided arguments
         user = User(
             username=username,
+            email=email,
+            password=password,  # Provide the password
             first_name=first_name,
-            last_name=last_name,
-            email=email
+            last_name=last_name
         )
-
-        user.password = password  # Assuming you have a password setter method in your User model
 
         db.session.add(user)
         db.session.commit()
@@ -66,27 +66,25 @@ class CheckSession(Resource):
         return {'error': 'Unauthorized'}, 401
 
 class Login(Resource):
-    def post(self):
-        try:
-            data = request.get_json()
-            username = data.get('username')
-            password = data.get('password')
 
-            user = User.query.filter_by(username=username).first()
-            if user and (password is None or user.check_password(password)):
-                session['user_id'] = user.id
-                response_data = {
-                    'user_id': user.id,
-                    'username': user.username,
-                    'first_name': user.first_name,
-                    'last_name': user.last_name,
-                    'email': user.email,
+    def post(self):
+
+        data = request.get_json()
+        username  = data.get("username")
+        password =  data.get("password")
+
+        user = User.query.filter(User.username==username).first()
+
+        if user and user.check_password(password):
+            session["user_id"] = user.id
+            respone = {
+                "id": user.id,
+                "username": user.username
                 }
-                return jsonify(response_data), 200
-            else:
-                return {'error': 'Unauthorized'}, 401
-        except Exception as e:
-            return {'error': str(e)}, 500
+
+            return respone
+        
+        return {"error": "Invalid username or password"}, 401
 
 class Logout(Resource):
     def delete(self):
