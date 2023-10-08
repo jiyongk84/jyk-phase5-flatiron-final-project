@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'; // Import Link from React Router
-import Access from './Access.js'; // Import the UserAccess component
+import UserAccess from './UserAccess.js'; // Import the UserAccess component
 
 function Profile() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -48,7 +48,7 @@ function Profile() {
     <div className="profile">
       {!loggedIn ? (
         <div>
-          <Access onSignIn={handleSignIn} onSignUp={() => setShowSignUp(true)} /> {/* Use the UserAccess component */}
+          <UserAccess onSignIn={handleSignIn} onSignUp={() => setShowSignUp(true)} /> {/* Use the UserAccess component */}
           {showSignUp && (
             <p>
               Don't have an account? <Link to="/signup">Sign Up</Link> {/* Link to the Sign Up route */}
