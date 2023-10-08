@@ -1,12 +1,7 @@
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.ext.associationproxy import association_proxy
-
-
 from config import db, bcrypt
 
-from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
 
 class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
@@ -99,4 +94,5 @@ class Payment(db.Model, SerializerMixin):
 
     def __repr__(self):
         return f"<Payment {self.id}>"
+
 
