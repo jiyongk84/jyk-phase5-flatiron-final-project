@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-
 function UserAccess({ onSignIn, onSignUp }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -11,6 +10,7 @@ function UserAccess({ onSignIn, onSignUp }) {
   const [inputError, setInputError] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
   const [isSignIn, setIsSignIn] = useState(true);
+  const history = useHistory();
 
   const handleSignIn = async () => {
     if (!username || !password) {
@@ -19,8 +19,7 @@ function UserAccess({ onSignIn, onSignUp }) {
     }
 
     try {
-      // Replace with your API endpoint for sign-in validation
-      const response = await fetch('/users/signin', {
+      const response = await fetch('/api/users/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -29,10 +28,8 @@ function UserAccess({ onSignIn, onSignUp }) {
       });
 
       if (response.ok) {
-        // Sign-in successful
         onSignIn(username);
       } else {
-        // Sign-in failed, display an error message
         setInputError(true);
       }
     } catch (error) {
@@ -41,37 +38,54 @@ function UserAccess({ onSignIn, onSignUp }) {
     }
   };
 
-  
-const history = useHistory();
-
   const handleSignUp = async () => {
     if (!username || !password || !firstName || !lastName || !email) {
       setInputError(true);
       return;
     }
-  
+
     try {
-      const response = await fetch('/users', {
+      const response = await fetch('/api/users/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ username, password, firstName, lastName, email }),
       });
-  
+
       if (response.ok) {
-        // Registration successful
         setIsRegistered(true);
-  
-        // Route to the User Data Display page after successful registration
         history.push('/userdatadisplay', { userData: { username, firstName, lastName, email } });
       } else {
-        // Registration failed, display an error message
         setInputError(true);
       }
     } catch (error) {
       console.error('Error registering:', error);
       setInputError(true);
+    }
+  };
+
+  const handleSignOut = async () => {
+    try {
+      const response = await fetch('/api/users/logout', {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        setIsRegistered(false);
+        setIsSignIn(true);
+        setUsername('');
+        setPassword('');
+        setFirstName('');
+        setLastName('');
+        setEmail('');
+        setInputError(false);
+        history.push('/signin'); // Redirect to the sign-in page
+      } else {
+        console.error('Error signing out:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error signing out:', error);
     }
   };
 
@@ -183,9 +197,14 @@ const history = useHistory();
           ) : (
             <div>
               <p>Registration successful! You can now sign in.</p>
+              <button onClick={() => setIsSignIn(true)}>Sign In</button>
             </div>
           )}
-          <p>Already have an account? <button onClick={() => setIsSignIn(true)}>Sign In</button></p>
+          {isRegistered && (
+            <div>
+              <button onClick={handleSignOut}>Sign Out</button>
+            </div>
+          )}
         </div>
       )}
     </div>
