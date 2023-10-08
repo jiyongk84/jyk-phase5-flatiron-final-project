@@ -1,8 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
+import Home from './Home';
+import Profile from './Profile';
 
 function App() {
-  return <h1>Project Client</h1>;
+  return (
+    <Router>
+      <div className="App">
+        <nav>
+          <Link to="/">Home</Link>
+          <Link to="/profile">Profile</Link>
+        </nav>
+        <h1>Paradise Airlines</h1>
+        <Switch>
+          <Route path="/" exact component={Home} />
+          <Route path="/profile" component={Profile} />
+        </Switch>
+      </div>
+    </Router>
+  );
 }
 
 export default App;
