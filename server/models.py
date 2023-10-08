@@ -13,26 +13,34 @@ class User(db.Model, SerializerMixin):
     first_name = db.Column(db.String(50), nullable=True)
     last_name = db.Column(db.String(50), nullable=True)
 
+    def __init__(self, username, email, password, first_name=None, last_name=None):
+        self.username = username
+        self.email = email
+        self.first_name = first_name
+        self.last_name = last_name
+        self.set_password(password)  # Set the password using the set_password method
+
     def __repr__(self):
         return f"<User {self.username}>"
 
-    @property
-    def password(self):
-        raise AttributeError("Password is not readable")
-
-    @password.setter
-    def password(self, plaintext_password):
+    def password_hash(self, plaintext_password):
         if not plaintext_password:
             raise ValueError("Password cannot be empty")
 
-        hashed_password = bcrypt.hashpw(plaintext_password.encode('utf-8'), bcrypt.gensalt())
-        self._password_hash = hashed_password.decode('utf-8')
+        hashed_password = bcrypt.generate_password_hash(plaintext_password).decode('utf-8')
+        return hashed_password
 
     def check_password(self, password):
         if not password:
             raise ValueError("Password cannot be empty")
 
-        return bcrypt.checkpw(password.encode('utf-8'), self._password_hash.encode('utf-8'))
+        return bcrypt.check_password_hash(self._password_hash, password)
+
+    def set_password(self, plaintext_password):
+        if not plaintext_password:
+            raise ValueError("Password cannot be empty")
+
+        self._password_hash = self.password_hash(plaintext_password)
 
 
 class Airport(db.Model, SerializerMixin):
