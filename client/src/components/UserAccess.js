@@ -43,19 +43,27 @@ function UserAccess({ onSignIn, onSignUp }) {
       setInputError(true);
       return;
     }
-
+  
     try {
       const response = await fetch('/api/users/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password, firstName, lastName, email }),
+        body: JSON.stringify({
+          username: username,
+          password: password,
+          first_name: firstName, // Match the server-side field name 'first_name'
+          last_name: lastName,   // Match the server-side field name 'last_name'
+          email: email,
+        }),
       });
-
+  
       if (response.ok) {
+        const userData = await response.json();
         setIsRegistered(true);
-        history.push('/userdatadisplay', { userData: { username, firstName, lastName, email } });
+        // Redirect to userdatadisplay with user data
+        history.push('/userdatadisplay', { userData });
       } else {
         setInputError(true);
       }
@@ -64,6 +72,7 @@ function UserAccess({ onSignIn, onSignUp }) {
       setInputError(true);
     }
   };
+  
 
   const handleSignOut = async () => {
     try {
