@@ -28,6 +28,7 @@ function UserAccess({ onSignIn, onSignUp }) {
       });
 
       if (response.ok) {
+        localStorage.setItem('isLoggedIn', 'true');
         onSignIn(username);
       } else {
         setInputError(true);
@@ -53,8 +54,8 @@ function UserAccess({ onSignIn, onSignUp }) {
         body: JSON.stringify({
           username: username,
           password: password,
-          first_name: firstName, // Match the server-side field name 'first_name'
-          last_name: lastName,   // Match the server-side field name 'last_name'
+          first_name: firstName, 
+          last_name: lastName,   
           email: email,
         }),
       });
