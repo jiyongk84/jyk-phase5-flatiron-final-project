@@ -1,5 +1,5 @@
 
-# Aircraft Maintenance Taskaid
+# Airport booking app
 
 This is a CLI (Command line interface) based app written in Python. This app is used to support Aircraft Technicians (Any Technicians) to keep track Maintenance tasks to aid them with their day to day work in a fast paced environment without constantly looking at paper work packages.  
 
@@ -7,7 +7,7 @@ This is a CLI (Command line interface) based app written in Python. This app is 
 ## Acknowledgements
 
  - [Flatiron School](https://flatironschool.com/) - For Bootcamp and Education
- - [Flask] (https://flask.palletsprojects.com/en/3.0.x/)
+ - [Flask](https://flask.palletsprojects.com/en/3.0.x/)
  - [SQLAlchemy](https://docs.sqlalchemy.org/en/14/) - SQLAlchemy documentation 
  - [Google](https://www.google.com) - Searching aid for things unknown
  - [github](https://github.com) - For Repositories and enable collaboration
