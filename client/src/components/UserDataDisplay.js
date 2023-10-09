@@ -5,10 +5,9 @@ function UserDataDisplay({ userData }) {
     <div className="user-data-display">
       <h2>User Data Display</h2>
       <p>Username: {userData.username}</p>
-      <p>First Name: {userData.firstName}</p>
-      <p>Last Name: {userData.lastName}</p>
+      <p>First Name: {userData.first_name}</p>
+      <p>Last Name: {userData.last_name}</p>
       <p>Email: {userData.email}</p>
-      {/* Additional user data fields can be displayed here */}
     </div>
   );
 }
