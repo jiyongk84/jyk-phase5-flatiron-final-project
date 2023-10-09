@@ -3,8 +3,9 @@
 # Standard library imports
 
 # Remote library imports
-from flask import request, session, jsonify
+from flask import request, session, jsonify, Response
 from flask_restful import Resource
+import json
 
 # Local imports
 from config import app, db, api
@@ -12,6 +13,24 @@ from config import app, db, api
 from models import Airport, User, Flight, Booking, Payment
 
 # Views go here!
+
+class UserProfile(Resource):
+    def get(self):
+        user_id = session.get('user_id')
+        if user_id is not None:
+            user = User.query.filter_by(id=user_id).first()  # Use filter_by to retrieve the user
+            if user:
+                user_data = {
+                    'user_id': user.id,
+                    'username': user.username,
+                    'first_name': user.first_name,
+                    'last_name': user.last_name,
+                    'email': user.email,
+                }
+                response_data = json.dumps(user_data)  # Serialize data using json.dumps
+                return Response(response=response_data, status=200, content_type="application/json")
+        return Response(response=json.dumps({'error': 'Unauthorized'}), status=401, content_type="application/json")
+
 
 class Signup(Resource):
     def post(self):
@@ -77,12 +96,12 @@ class Login(Resource):
 
         if user and user.check_password(password):
             session["user_id"] = user.id
-            respone = {
+            response = {
                 "id": user.id,
                 "username": user.username
                 }
 
-            return respone
+            return response
         
         return {"error": "Invalid username or password"}, 401
 
@@ -95,6 +114,7 @@ class Logout(Resource):
             return {'error': 'Unauthorized'}, 401
 
 # Add your resource routes
+api.add_resource(UserProfile, '/api/users/profile')
 api.add_resource(Signup, '/api/users/signup')
 api.add_resource(CheckSession, '/api/users/checksession')
 api.add_resource(Login, '/api/users/login')
