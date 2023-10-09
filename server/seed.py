@@ -9,7 +9,7 @@ if __name__ == '__main__':
     with app.app_context():
         print("Starting seed with real airport data...")
 
-        # Construct the absolute file path to the JSON file in the root folder
+        
         json_file_path = os.path.join(os.path.dirname(__file__), "airport_data.json")
 
         try:
