@@ -64,7 +64,7 @@ function UserAccess({ onSignIn, onSignUp }) {
         const userData = await response.json();
         setIsRegistered(true);
         // Redirect to userdatadisplay with user data
-        history.push('/userdatadisplay', { userData });
+        history.push('/profile', { userData });
       } else {
         setInputError(true);
       }
