@@ -1,7 +1,7 @@
 
 # Airport booking app
 
-This is a CLI (Command line interface) based app written in Python. This app is used to support Aircraft Technicians (Any Technicians) to keep track Maintenance tasks to aid them with their day to day work in a fast paced environment without constantly looking at paper work packages.  
+This is a full stack app with HTML, CSS, and Javascript with React in the frontend and Python, Flask, SQLalchemy for backend. This app is used to search and book airline tickets.
 
 
 ## Acknowledgements
