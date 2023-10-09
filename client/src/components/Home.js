@@ -1,14 +1,43 @@
 import React, { useState } from 'react';
+import SearchResults from './SearchResults';
 
 function Home() {
     const [departureCity, setDepartureCity] = useState('');
     const [destinationCity, setDestinationCity] = useState('');
     const [departureDate, setDepartureDate] = useState('');
     const [returnDate, setReturnDate] = useState('');
+    const [showResults, setShowResults] = useState(false);
   
-    const handleSearch = () => {
-      // Implement your search logic here
-      // You can use the state values (departureCity, destinationCity, departureDate, returnDate)
+    const handleSearch = async () => {
+      // Prepare the flight search data
+      const searchData = {
+        departureCity,
+        destinationCity,
+        departureDate,
+        returnDate,
+      };
+  
+      try {
+        const response = await fetch('/api/flights/search', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(searchData),
+        });
+  
+        if (response.ok) {
+          setShowResults(true); 
+          // Handle a successful search response, e.g., redirect to the search results page
+          // or update the UI with search results.
+        } else {
+          // Handle the case where the search was not successful, e.g., show an error message.
+          console.error('Flight search failed');
+        }
+      } catch (error) {
+        console.error('Error during flight search:', error);
+      }
+      
     };
   
     return (
@@ -63,6 +92,11 @@ function Home() {
   
           <button type="button" onClick={handleSearch}>Search</button>
         </form>
+
+        {showResults && (
+        // Render the SearchResults component when showResults is true
+        <SearchResults />
+        )}
       </div>
     );
   }
