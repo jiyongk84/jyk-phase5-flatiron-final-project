@@ -1,0 +1,89 @@
+{
+    "airports": [
+      {
+        "name": "John F. Kennedy International Airport",
+        "abbreviation": "JFK",
+        "city": "New York",
+        "state": "New York"
+      },
+      {
+        "name": "Miami International Airport",
+        "abbreviation": "MIA",
+        "city": "Miami",
+        "state": "Florida"
+      },
+      {
+        "name": "Hartsfield-Jackson Atlanta International Airport",
+        "abbreviation": "ATL",
+        "city": "Atlanta",
+        "state": "Georgia"
+      },
+      {
+        "name": "Logan International Airport",
+        "abbreviation": "BOS",
+        "city": "Boston",
+        "state": "Massachusetts"
+      },
+      {
+        "name": "Philadelphia International Airport",
+        "abbreviation": "PHL",
+        "city": "Philadelphia",
+        "state": "Pennsylvania"
+      },
+      {
+        "name": "Ronald Reagan Washington National Airport",
+        "abbreviation": "DCA",
+        "city": "Washington",
+        "state": "D.C."
+      },
+      {
+        "name": "Washington Dulles International Airport",
+        "abbreviation": "IAD",
+        "city": "Washington",
+        "state": "D.C."
+      },
+      {
+        "name": "George Bush Intercontinental Airport",
+        "abbreviation": "IAH",
+        "city": "Houston",
+        "state": "Texas"
+      },
+      {
+        "name": "Chicago O'Hare International Airport",
+        "abbreviation": "ORD",
+        "city": "Chicago",
+        "state": "Illinois"
+      },
+      {
+        "name": "Los Angeles International Airport",
+        "abbreviation": "LAX",
+        "city": "Los Angeles",
+        "state": "California"
+      },
+      {
+        "name": "San Francisco International Airport",
+        "abbreviation": "SFO",
+        "city": "San Francisco",
+        "state": "California"
+      },
+      {
+        "name": "Seattle-Tacoma International Airport",
+        "abbreviation": "SEA",
+        "city": "Seattle",
+        "state": "Washington"
+      },
+      {
+        "name": "San Diego International Airport",
+        "abbreviation": "SAN",
+        "city": "San Diego",
+        "state": "California"
+      },
+      {
+        "name": "Portland International Airport",
+        "abbreviation": "PDX",
+        "city": "Portland",
+        "state": "Oregon"
+      }
+    ]
+  }
+  
