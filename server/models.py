@@ -63,6 +63,8 @@ class Flight(db.Model, SerializerMixin):
     flight_date = db.Column(db.Date, nullable=False)
     departure_time = db.Column(db.Time, nullable=False)
     destination_time = db.Column(db.Time, nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    
 
     # Establish a many-to-one relationship with the departure airport
     departure_airport_id = db.Column(db.Integer, db.ForeignKey('airports.id'), nullable=False)
@@ -85,8 +87,6 @@ class Booking(db.Model, SerializerMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     flight_id = db.Column(db.Integer, db.ForeignKey('flights.id'), nullable=False)
     order_number = db.Column(db.String(20), unique=True, nullable=False)
-    seat_number = db.Column(db.String(10), nullable=False)  # Add seat_number field
-    price = db.Column(db.Float, nullable=False)
     order_status = db.Column(db.Integer, nullable=False)  # 1 = complete, 2 = pending, 3 = cancelled
 
     def __repr__(self):
