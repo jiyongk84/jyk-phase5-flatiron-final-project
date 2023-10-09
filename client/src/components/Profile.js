@@ -1,20 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom'; // Import Link from React Router
-import UserAccess from './UserAccess.js'; // Import the UserAccess component
+import { Link } from 'react-router-dom';
+import UserAccess from './UserAccess.js';
 
 function Profile() {
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(localStorage.getItem('isLoggedIn') === 'true');
   const [username, setUsername] = useState('');
-  const [userData, setUserData] = useState(null);
-  const [showSignUp, setShowSignUp] = useState(false); // State to control the visibility of the Sign Up component
+  const [userData, setUserData] = useState({
+    user_id: '',
+    username: '',
+    first_name: '',
+    last_name: '',
+    email: ''
+  });
+  const [showSignUp, setShowSignUp] = useState(false);
 
   useEffect(() => {
-    // Fetch user profile data when logged in
-    if (loggedIn) {
-      fetch('/users/profile', {
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    if (isLoggedIn === 'true') {
+      setLoggedIn(true);
+      fetch('/api/users/profile', {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`, // Add your authentication token here if needed
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       })
         .then((response) => {
@@ -30,47 +37,54 @@ function Profile() {
         .catch((error) => {
           console.error(error);
         });
+
     }
   }, [loggedIn]);
 
   const handleSignIn = (user) => {
     setLoggedIn(true);
-    setUsername(user);
+    setUsername(user.username);
+    localStorage.setItem('isLoggedIn', 'true'); // Set login status in localStorage
   };
 
   const handleSignOut = () => {
     setLoggedIn(false);
     setUsername('');
-    setUserData(null);
+    setUserData({
+      user_id: '',
+      username: '',
+      first_name: '',
+      last_name: '',
+      email: ''
+    });
+    localStorage.setItem('isLoggedIn', 'false'); // Set login status in localStorage
   };
 
   return (
     <div className="profile">
       {!loggedIn ? (
         <div>
-          <UserAccess onSignIn={handleSignIn} onSignUp={() => setShowSignUp(true)} /> {/* Use the UserAccess component */}
+          <UserAccess onSignIn={handleSignIn} onSignUp={() => setShowSignUp(true)} />
           {showSignUp && (
             <p>
-              Don't have an account? <Link to="/signup">Sign Up</Link> {/* Link to the Sign Up route */}
+              Don't have an account? <Link to="/signup">Sign Up</Link>
             </p>
           )}
         </div>
       ) : (
         <div>
-          <h2>Profile</h2>
-          <p>Welcome, {username}!</p>
-          {userData && (
-            <div>
-              <h3>User Profile</h3>
-              <p>Username: {userData.username}</p>
-              <p>First Name: {userData.firstName}</p>
-              <p>Last Name: {userData.lastName}</p>
-              <p>Email: {userData.email}</p>
-              {/* Additional profile data can be displayed here */}
-            </div>
-          )}
-          <button type="button" onClick={handleSignOut}>Sign Out</button>
-        </div>
+      <p className="welcome-text">Welcome, <span className="username-text">{userData.username}</span>!</p>
+          {userData.user_id && (
+        <div className='profile-data'>
+          <h3>Profile</h3>
+          <p>Username: {userData.username}</p>
+          <p>First Name: {userData.first_name}</p>
+          <p>Last Name: {userData.last_name}</p>
+          <p>Email: {userData.email}</p>
+      </div>
+  )}
+        <button type="button" onClick={handleSignOut}>Sign Out</button>
+      </div>
       )}
     </div>
   );
