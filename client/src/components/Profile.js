@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import UserAccess from './UserAccess.js';
 
 function Profile() {
@@ -13,6 +13,7 @@ function Profile() {
     email: ''
   });
   const [showSignUp, setShowSignUp] = useState(false);
+  const history = useHistory();
 
   useEffect(() => {
     const isLoggedIn = localStorage.getItem('isLoggedIn');
@@ -37,14 +38,14 @@ function Profile() {
         .catch((error) => {
           console.error(error);
         });
-
     }
   }, [loggedIn]);
 
   const handleSignIn = (user) => {
     setLoggedIn(true);
     setUsername(user.username);
-    localStorage.setItem('isLoggedIn', 'true'); // Set login status in localStorage
+    localStorage.setItem('isLoggedIn', 'true');
+    history.push('/profile');
   };
 
   const handleSignOut = () => {
@@ -57,14 +58,18 @@ function Profile() {
       last_name: '',
       email: ''
     });
-    localStorage.setItem('isLoggedIn', 'false'); // Set login status in localStorage
+    localStorage.setItem('isLoggedIn', 'false');
+  };
+
+  const handleSignUp = async () => {
+    console.log('handleSignUp called'); 
   };
 
   return (
     <div className="profile">
       {!loggedIn ? (
         <div>
-          <UserAccess onSignIn={handleSignIn} onSignUp={() => setShowSignUp(true)} />
+          <UserAccess onSignIn={handleSignIn} onSignUp={handleSignUp} />
           {showSignUp && (
             <p>
               Don't have an account? <Link to="/signup">Sign Up</Link>
@@ -73,18 +78,18 @@ function Profile() {
         </div>
       ) : (
         <div>
-      <p className="welcome-text">Welcome, <span className="username-text">{userData.username}</span>!</p>
+          <p className="welcome-text">Welcome, <span className="username-text">{userData.username}</span>!</p>
           {userData.user_id && (
-        <div className='profile-data'>
-          <h3>Profile</h3>
-          <p>Username: {userData.username}</p>
-          <p>First Name: {userData.first_name}</p>
-          <p>Last Name: {userData.last_name}</p>
-          <p>Email: {userData.email}</p>
-      </div>
-  )}
-        <button type="button" onClick={handleSignOut}>Sign Out</button>
-      </div>
+            <div className='profile-data'>
+              <h3>Profile</h3>
+              <p>Username: {userData.username}</p>
+              <p>First Name: {userData.first_name}</p>
+              <p>Last Name: {userData.last_name}</p>
+              <p>Email: {userData.email}</p>
+            </div>
+          )}
+          <button type="button" onClick={handleSignOut}>Sign Out</button>
+        </div>
       )}
     </div>
   );
