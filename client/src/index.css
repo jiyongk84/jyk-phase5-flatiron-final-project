@@ -1,27 +1,23 @@
-:root {
-  --bg: #282c34;
-  --header: #fff;
-  --link: #61dafb;
-  --text: hsla(0, 0%, 100%, 0.88);
-}
 
 h1 {
-  background-color: #ff5500; /* Background color of your choice */
-  color: #fff; /* Text color for the heading */
-  padding: 10px; /* Padding for spacing around the text */
-  text-align: center; /* Center-align the text */
+  background-color: #ff5500; 
+  color: #fff; 
+  padding: 10px;
+  text-align: center;
 }
 
+
 .navbar {
-  background-color: #007bff;
-  color: #fff;
+  background-color: #007bff; 
+  color: #fff; 
   padding: 10px;
   display: flex;
   justify-content: space-around;
 }
 
+
 .navbar a {
-  color: #fff;
+  color: #fff; 
   text-decoration: none;
   margin: 0 10px;
 }
@@ -30,20 +26,14 @@ h1 {
   text-decoration: underline;
 }
 
-
-.home {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #fff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
 .home h2 {
   text-align: center;
   margin-bottom: 20px;
+}
+
+
+form {
+  text-align: center;
 }
 
 .form-group {
@@ -64,27 +54,30 @@ h1 {
 }
 
 button {
-  background-color: #007bff;
+  background-color: #007bff; 
   color: #fff;
   border: none;
-  padding: 10px 20px;
+  padding: 10px 10px;
   cursor: pointer;
   border-radius: 5px;
-  width: 100%;
+  margin-left: 10px;
+  width: 10%;
+  height: 30px;
 }
 
 button:hover {
   background-color: #0056b3;
 }
 
+
 .profile {
-  display: flex; 
+  display: flex;
   max-width: 400px;
   margin: 0;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  background-color: #fff;
+  background-color: #fff; 
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   justify-content: flex-start;
 }
@@ -102,6 +95,7 @@ button:hover {
   margin-top: 20px;
 }
 
+
 .profile button {
   background-color: #ff5733;
   color: #fff;
@@ -117,6 +111,7 @@ button:hover {
   background-color: #ff3e15;
 }
 
+
 .welcome-text {
   font-size: 20px;
   font-weight: bold;
@@ -130,7 +125,57 @@ button:hover {
   color: #c54409;
 }
 
+
 .profile-data p {
-  font-weight:lighter
+  font-weight: lighter;
 }
 
+
+.airport-table-container {
+  max-width: 600px; 
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
+.airport-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.airport-table th {
+  background-color: #007bff;
+  color: #fff; 
+  padding: 10px;
+}
+
+.airport-table td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+}
+
+.airport-table tr:nth-child(even) {
+  background-color: #f2f2f2; 
+}
+
+
+.flight-table th {
+  background-color: #007bff;
+  color: #fff; 
+  padding: 10px;
+}
+
+.flight-table td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+}
+
+.flight-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
