@@ -18,7 +18,7 @@ class User(db.Model, SerializerMixin):
         self.email = email
         self.first_name = first_name
         self.last_name = last_name
-        self.set_password(password)  # Set the password using the set_password method
+        self.set_password(password)
 
     def __repr__(self):
         return f"<User {self.username}>"
@@ -52,7 +52,7 @@ class Airport(db.Model, SerializerMixin):
     state = db.Column(db.String(50), nullable=False)
 
     def __repr__(self):
-        return f"<Airport {self.name}>"
+        return f"<Airport {self.name}, {self.id}>"
 
 class Flight(db.Model, SerializerMixin):
     __tablename__ = 'flights'
