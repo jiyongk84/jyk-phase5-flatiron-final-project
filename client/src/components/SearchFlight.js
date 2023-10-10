@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import BookFlight from './BookFlight';
 
 function SearchFlight() {
   const [airports, setAirports] = useState([]);
@@ -8,6 +8,8 @@ function SearchFlight() {
   const [cityName, setCityName] = useState('');
   const [flights, setFlights] = useState([]);
   const [loadingFlights, setLoadingFlights] = useState(false);
+
+  const [cart, setCart] = useState([]); // Add cart state
 
   useEffect(() => {
     // Make a GET request to fetch airport data
@@ -66,6 +68,21 @@ function SearchFlight() {
         console.error('Error while fetching flight data:', error);
         setLoadingFlights(false);
       });
+  };
+
+  // Define the addToCart function to add flights to the cart
+  const addToCart = (flight) => {
+    // Check if the flight is already in the cart
+    if (!cart.some((item) => item.id === flight.id)) {
+      // If not, add it to the cart
+      setCart([...cart, flight]);
+    }
+  };
+
+  // Define the removeFromCart function to remove flights from the cart
+  const removeFromCart = (flightId) => {
+    const updatedCart = cart.filter((item) => item.id !== flightId);
+    setCart(updatedCart);
   };
 
   return (
@@ -127,6 +144,7 @@ function SearchFlight() {
                 <th>Price</th>
                 <th>Departure Airport ID</th>
                 <th>Destination Airport ID</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -141,11 +159,19 @@ function SearchFlight() {
                   <td>{flight.price}</td>
                   <td>{flight.departure_airport_id}</td>
                   <td>{flight.destination_airport_id}</td>
+                  <td>
+                    <button onClick={() => addToCart(flight)}>Add to Cart</button>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
+      )}
+
+      {/* Conditional rendering of BookFlight */}
+      {cart.length > 0 && (
+        <BookFlight flights={cart} removeFromCart={removeFromCart} />
       )}
     </div>
   );
