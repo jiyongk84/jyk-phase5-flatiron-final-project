@@ -1,11 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
 import Home from './Home';
 import Profile from './Profile';
-import SearchResults from './SearchResults';
 
 function App() {
-  const [searchResults, setSearchResults] = useState([]);
   return (
     <Router>
       <div className="App">
@@ -14,16 +12,13 @@ function App() {
           <Link to="/profile">Profile</Link>
         </nav>
         <Switch>
-          <Route path="/" exact component={() => (
+          <Route path="/" exact>
             <div>
               <h1>Paradise Airlines</h1>
-              <Home onSearch={setSearchResults} /> {/* Pass setSearchResults function */}
+              <Home />
             </div>
-          )} />
+          </Route>
           <Route path="/profile" component={Profile} />
-          <Route path="/search-results" component={() => (
-            <SearchResults searchResults={searchResults} /> // Pass searchResults as a prop
-          )} />
         </Switch>
       </div>
     </Router>
