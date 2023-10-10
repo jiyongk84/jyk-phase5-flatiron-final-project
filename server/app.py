@@ -6,6 +6,7 @@
 from flask import request, session, jsonify, Response
 from flask_restful import Resource
 import json
+from sqlalchemy_serializer import SerializerMixin
 
 # Local imports
 from config import app, db, api
@@ -13,6 +14,23 @@ from config import app, db, api
 from models import Airport, User, Flight, Booking, Payment
 
 # Views go here!
+
+class AirportSearch(Resource):
+    def get(self):
+        # Retrieve the list of all airports (or whatever your desired logic is)
+        airports = Airport.query.all()
+
+        # Serialize airport data into a list of dictionaries
+        airport_data = [{
+            "id": airport.id,
+            "name": airport.name,
+            "city": airport.city,
+            "state": airport.state
+        } for airport in airports]
+
+        # Return the serialized data as a JSON response
+        return airport_data, 200
+
 
 class UserProfile(Resource):
     def get(self):
@@ -113,30 +131,46 @@ class Logout(Resource):
             return {}, 204
         else:
             return {'error': 'Unauthorized'}, 401
-        
+
+
+
 class FlightSearch(Resource):
     def post(self):
         # Get the JSON data from the request
         search_data = request.get_json()
+        # Extract search criteria (city name)
+        city_name = search_data.get('city')
+        
+        # Retrieve all airports and filter by city
+        airports = Airport.query.filter_by(city=city_name).all()
 
-        # Extract search criteria
-        departure_city = search_data.get('departureCity')
-        destination_city = search_data.get('destinationCity')
-        departure_date = search_data.get('departureDate')
-        return_date = search_data.get('returnDate')
+        # Get the IDs of airports in the specified city
+        airport_ids_in_city = [airport.id for airport in airports]
 
-        # Query the database for flights (adjust this query to match your model)
-        flights = Flight.query.filter(
-            Flight.name == departure_city,
-            Flight.airline == destination_city,
-            Flight.flight_date == departure_date,
-            # Add any additional filters as needed
+        # Retrieve flights that depart from or arrive at airports in the specified city
+        matching_flights = Flight.query.filter(
+            (Flight.departure_airport_id.in_(airport_ids_in_city)) |
+            (Flight.destination_airport_id.in_(airport_ids_in_city))
         ).all()
 
-        # Serialize flight data (adjust the serialization method to match your model)
-        flight_data = [flight.serialize() for flight in flights]
+        # Create a list of dictionaries from matching_flights
+        flight_data = []
+        for flight in matching_flights:
+            flight_dict = {
+                'id': flight.id,
+                'name': flight.name,
+                'airline': flight.airline,
+                'flight_date': str(flight.flight_date),
+                'departure_time': str(flight.departure_time),
+                'destination_time': str(flight.destination_time),
+                'price': flight.price,
+                'departure_airport_id': flight.departure_airport_id,
+                'destination_airport_id': flight.destination_airport_id
+            }
+            flight_data.append(flight_dict)
 
         return flight_data, 200
+
 
 class Booking(Resource):
     def post(self):
@@ -213,7 +247,7 @@ class Booking(Resource):
         return {}, 204
 
 
-# Add your resource routes
+# Resource Routes
 api.add_resource(UserProfile, '/api/users/profile')
 api.add_resource(Signup, '/api/users/signup')
 api.add_resource(CheckSession, '/api/users/checksession')
@@ -222,6 +256,7 @@ api.add_resource(Logout, '/api/users/logout')
 api.add_resource(Booking, '/api/bookings', endpoint='bookings')
 api.add_resource(Booking, '/api/bookings/<int:booking_id>', endpoint='booking')
 api.add_resource(FlightSearch, '/api/flights/search')
+api.add_resource(AirportSearch, '/api/airports/airportsearch')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
