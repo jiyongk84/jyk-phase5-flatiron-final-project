@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
+
 function SearchFlight() {
   const [airports, setAirports] = useState([]);
   const [loadingAirports, setLoadingAirports] = useState(true);
@@ -73,9 +74,28 @@ function SearchFlight() {
       {loadingAirports ? (
         <p>Loading airport data...</p>
       ) : (
-        <table>
-          {/* Display Airport data */}
-        </table>
+        <div className="airport-table-container">
+          <table className="airport-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Location</th>
+                {/* Add more table headers if needed */}
+              </tr>
+            </thead>
+            <tbody>
+              {airports.map((airport) => (
+                <tr key={airport.id}>
+                  <td>{airport.id}</td>
+                  <td>{airport.name}</td>
+                  <td>{airport.location}</td>
+                  {/* Add more table data cells if needed */}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
 
       <h2>Search for Flights</h2>
@@ -94,9 +114,8 @@ function SearchFlight() {
       {loadingFlights ? (
         <p>Loading flight data...</p>
       ) : (
-        <div>
-          <h3>Flight Search Results</h3>
-          <table>
+        <div className="flight-table-container">
+          <table className="flight-table">
             <thead>
               <tr>
                 <th>ID</th>
