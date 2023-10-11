@@ -82,6 +82,11 @@ Fork my repo:
 
   npm start
 ```
+    
+## Screenshots
+
+![App Screenshot](https://github.com/jiyongk84/jyk-phase5-flatiron-final-project/blob/main/flatiron-phase5-project%20sample1.png)
+![App Screenshot](https://github.com/jiyongk84/jyk-phase5-flatiron-final-project/blob/main/flatiron-phase5-project%20sample2.png)
 
 
 ## License
