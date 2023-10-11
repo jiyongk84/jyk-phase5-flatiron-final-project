@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 function BookFlight(props) {
   const { flights, removeFromCart } = props;
@@ -6,17 +6,30 @@ function BookFlight(props) {
   return (
     <div className="flight-booking">
       <h2>Cart</h2>
-      <div className="cart-list">
-        {flights.map((cartItem) => (
-          <div key={cartItem.id} className="cart-item">
-            <p>ID: {cartItem.id}</p>
-            <p>Name: {cartItem.name}</p>
-            <p>Airline: {cartItem.airline}</p>
-            <p>Price: ${cartItem.price.toFixed(2)}</p>
-            <button onClick={() => removeFromCart(cartItem.id)}>Remove</button>
-          </div>
-        ))}
-      </div>
+      <table className="cart-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Airline</th>
+            <th>Price</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {flights.map((cartItem) => (
+            <tr key={cartItem.id} className="cart-item">
+              <td>{cartItem.id}</td>
+              <td>{cartItem.name}</td>
+              <td>{cartItem.airline}</td>
+              <td>${cartItem.price.toFixed(2)}</td>
+              <td>
+                <button onClick={() => removeFromCart(cartItem.id)}>Remove</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
