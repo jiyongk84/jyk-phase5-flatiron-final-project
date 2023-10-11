@@ -21,12 +21,10 @@ No external APIs were used. They were locally created with sample airport cities
 #### Get all items
 
 ```http://localhost:3000/api/
-  GET /${id}
-  GET /${user}
-  GET /${airport}
-  GET /${flight}
-  GET /${booking}
-  GET /${payment}
+  GET /${users}
+  GET /${airports}
+  GET /${flights}
+  GET /${bookings}
 ```
 
 | Parameter | Type     | Description                       |
@@ -84,10 +82,6 @@ Fork my repo:
 
   npm start
 ```
-    
-## Screenshots
-
-![App Screenshot](coming soon)
 
 
 ## License

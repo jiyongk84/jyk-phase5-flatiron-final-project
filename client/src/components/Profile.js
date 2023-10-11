@@ -12,6 +12,7 @@ function Profile() {
     last_name: '',
     email: ''
   });
+  const [bookings, setBookings] = useState([]);
   const [showSignUp, setShowSignUp] = useState(false);
   const history = useHistory();
 
@@ -38,6 +39,27 @@ function Profile() {
         .catch((error) => {
           console.error(error);
         });
+
+      // Fetch user's bookings
+      fetch('/api/bookings/0', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error('Failed to fetch user bookings');
+          }
+        })
+        .then((data) => {
+          setBookings(data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
   }, [loggedIn]);
 
@@ -58,11 +80,12 @@ function Profile() {
       last_name: '',
       email: ''
     });
+    setBookings([]); // Clear the bookings data
     localStorage.setItem('isLoggedIn', 'false');
   };
 
   const handleSignUp = async () => {
-    console.log('handleSignUp called'); 
+    console.log('handleSignUp called');
   };
 
   return (
@@ -88,6 +111,22 @@ function Profile() {
               <p>Email: {userData.email}</p>
             </div>
           )}
+
+          {bookings.length > 0 && (
+            <div className='orders'>
+              <h3>Orders</h3>
+              <ul>
+                {bookings.map((booking) => (
+                  <li key={booking.order_number}>
+                    Order Number: {booking.order_number}
+                    Flight ID: {booking.flight_id}
+                    Order Status: {booking.order_status}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           <button type="button" onClick={handleSignOut}>Sign Out</button>
         </div>
       )}
