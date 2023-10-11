@@ -5,7 +5,7 @@
 # Remote library imports
 from flask import request, session, jsonify, Response
 from flask_restful import Resource
-import json
+import json, random, string
 from sqlalchemy_serializer import SerializerMixin
 
 # Local imports
@@ -90,6 +90,7 @@ class Signup(Resource):
 class CheckSession(Resource):
     def get(self):
         user_id = session.get('user_id')
+        session['user_id'] = user.id
         if user_id is not None:
             user = User.query.get(user_id)
             if user:
@@ -102,7 +103,6 @@ class CheckSession(Resource):
                 }
                 return jsonify(response_data), 200
         return {'error': 'Unauthorized'}, 401
-
 class Login(Resource):
 
     def post(self):
@@ -172,80 +172,51 @@ class FlightSearch(Resource):
         return flight_data, 200
 
 
-class Booking(Resource):
+class BookingFlight(Resource):
     def post(self):
-        # Extract booking data from the request
         data = request.get_json()
-        user_id = session.get('user_id')
 
-        if user_id is None:
-            return {'error': 'Unauthorized'}, 401
-
-        flight_name = data.get('name')  # Assuming the key in the request is 'name'
-
-        if not flight_name:
-            return {"error": "422 Unprocessable Entity"}, 422
-
-        # Generate an order number based on flight name
-        order_number = f"FLIGHT-{flight_name.replace(' ', '-')}"
-
-        # Create a new Booking instance with the provided data
-        booking = Booking(
-            user_id=user_id,
-            flight_name=flight_name,  # Assuming your Booking model has a 'flight_name' field
-            order_number=order_number,
-            order_status=2  # Assume order status is pending (you can adjust this as needed)
-        )
-
-        # Add the new booking to the session
-        db.session.add(booking)
+        if not data or not isinstance(data, list):
+            return {"message": "No data provided or data is not in the expected format"}, 400
 
         try:
+            # Create a list to store the Booking instances
+            bookings = []
+
+            for booking_data in data:
+                user_id = booking_data.get("user_id")
+                flight_id = booking_data.get("flight_id")
+                order_number = booking_data.get("order_number")
+                order_status = booking_data.get("order_status")
+
+                # Create a Booking instance for each booking in the array
+                booking = Booking(
+                    user_id=user_id,
+                    flight_id=flight_id,
+                    order_number=order_number,
+                    order_status=order_status
+                )
+
+                # Add the Booking instance to the list of bookings
+                bookings.append(booking)
+
+            # Add all the booking instances to the database session
+            db.session.add_all(bookings)
+
             # Commit the changes to the database
             db.session.commit()
-            return jsonify({"message": "Booking created successfully", "order_number": order_number}), 201
+
+            return {"message": "Booking(s) created successfully"}, 201
+
         except Exception as e:
-            # Handle any database errors here (e.g., rollback on error)
-            db.session.rollback()
-            return {"error": "An error occurred while creating the booking"}, 500
+            # Handle any potential exceptions here
+            return {"message": f"An error occurred: {str(e)}"}, 500
 
-    def get(self):
-        user_id = session.get('user_id')
-
-        if user_id is None:
-            return {'error': 'Unauthorized'}, 401
-
-        # Retrieve bookings for the authenticated user
-        bookings = Booking.query.filter_by(user_id=user_id).all()
-
-        booking_data = []
-
-        for booking in bookings:
-            booking_data.append({
-                'id': booking.id,
-                'flight_name': booking.flight_name,
-                'order_number': booking.order_number,
-                'order_status': booking.order_status
-            })
-
-        return jsonify(booking_data), 200
-
-    def delete(self, booking_id):
-        user_id = session.get('user_id')
-
-        if user_id is None:
-            return {'error': 'Unauthorized'}, 401
-
-        booking = Booking.query.filter_by(id=booking_id, user_id=user_id).first()
-
-        if not booking:
-            return {'error': 'Booking not found'}, 404
-
-        db.session.delete(booking)
-        db.session.commit()
-
-        return {}, 204
-
+# def get_user_id():
+#     # Replace this with your logic to retrieve the user's ID.
+#     # You may use Flask-Login or another method to get the current user's ID.
+#     # For example, if using Flask-Login, you can use current_user.id.
+#     return current_user.id
 
 # Resource Routes
 api.add_resource(UserProfile, '/api/users/profile')
@@ -253,8 +224,8 @@ api.add_resource(Signup, '/api/users/signup')
 api.add_resource(CheckSession, '/api/users/checksession')
 api.add_resource(Login, '/api/users/login')
 api.add_resource(Logout, '/api/users/logout')
-api.add_resource(Booking, '/api/bookings', endpoint='bookings')
-api.add_resource(Booking, '/api/bookings/<int:booking_id>', endpoint='booking')
+api.add_resource(BookingFlight, '/api/bookings', endpoint='bookings')
+api.add_resource(BookingFlight, '/api/bookings/<int:booking_id>', endpoint='booking')
 api.add_resource(FlightSearch, '/api/flights/search')
 api.add_resource(AirportSearch, '/api/airports/airportsearch')
 
