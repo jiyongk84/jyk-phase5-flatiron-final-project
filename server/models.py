@@ -87,11 +87,12 @@ class Booking(db.Model, SerializerMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     flight_id = db.Column(db.Integer, db.ForeignKey('flights.id'), nullable=False)
     order_number = db.Column(db.String(20), unique=True, nullable=False)
-    order_status = db.Column(db.Integer, nullable=False)  # 1 = complete, 2 = pending, 3 = cancelled
+    order_status = db.Column(db.Integer, nullable=False)
+    
 
     def __repr__(self):
-        return f"<Booking {self.order_number}>"
-
+        return f"<Booking {self.flight_id}, {self.user_id}>"
+    
 class Payment(db.Model, SerializerMixin):
     __tablename__ = 'payments'
 
