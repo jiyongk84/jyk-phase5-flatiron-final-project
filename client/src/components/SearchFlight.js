@@ -125,7 +125,7 @@ function SearchFlight() {
             onChange={(e) => setCityName(e.target.value)}
           />
         </label>
-        <button type="submit">Search</button>
+        <button className = "search_button" type="submit">Search</button>
       </form>
 
       {loadingFlights ? (
@@ -160,7 +160,7 @@ function SearchFlight() {
                   <td>{flight.departure_airport_id}</td>
                   <td>{flight.destination_airport_id}</td>
                   <td>
-                    <button onClick={() => addToCart(flight)}>Add to Cart</button>
+                    <button className='add_to_cart' onClick={() => addToCart(flight)}>Add to Cart</button>
                   </td>
                 </tr>
               ))}
