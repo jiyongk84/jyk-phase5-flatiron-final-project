@@ -47,7 +47,6 @@ function BookFlight(props) {
     try {
       setSubmitting(true);
 
-      // Create an array of booking objects based on cart data
       const bookings = flights.map((cartItem) => ({
         user_id: userId, 
         flight_id: cartItem.name, 
@@ -55,7 +54,7 @@ function BookFlight(props) {
         order_status: 0
       }));
       console.log(bookings)
-      // Make a POST request to create the bookings
+      
       const bookingResponse = await fetch('/api/bookings', {
         method: 'POST',
         headers: {
@@ -109,7 +108,7 @@ function BookFlight(props) {
       </table>
 
       <div className="cart-total">
-        <p>Total: ${total.toFixed(2)}</p> {/* Display the total */}
+        <p>Total: ${total.toFixed(2)}</p>
       </div>
 
       <div className="cart-count">

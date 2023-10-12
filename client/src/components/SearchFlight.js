@@ -9,10 +9,9 @@ function SearchFlight() {
   const [flights, setFlights] = useState([]);
   const [loadingFlights, setLoadingFlights] = useState(false);
 
-  const [cart, setCart] = useState([]); // Add cart state
+  const [cart, setCart] = useState([]);
 
   useEffect(() => {
-    // Make a GET request to fetch airport data
     fetch('/api/airports/airportsearch', {
       method: 'GET',
       headers: {
@@ -45,7 +44,6 @@ function SearchFlight() {
 
     setLoadingFlights(true);
 
-    // Make a POST request to search for flights based on the city name
     fetch('/api/flights/search', {
       method: 'POST',
       headers: {
@@ -70,16 +68,14 @@ function SearchFlight() {
       });
   };
 
-  // Define the addToCart function to add flights to the cart
+  
   const addToCart = (flight) => {
-    // Check if the flight is already in the cart
     if (!cart.some((item) => item.id === flight.id)) {
-      // If not, add it to the cart
       setCart([...cart, flight]);
     }
   };
 
-  // Define the removeFromCart function to remove flights from the cart
+  
   const removeFromCart = (flightId) => {
     const updatedCart = cart.filter((item) => item.id !== flightId);
     setCart(updatedCart);
@@ -98,7 +94,6 @@ function SearchFlight() {
                 <th>ID</th>
                 <th>Name</th>
                 <th>Location</th>
-                {/* Add more table headers if needed */}
               </tr>
             </thead>
             <tbody>
@@ -107,7 +102,6 @@ function SearchFlight() {
                   <td>{airport.id}</td>
                   <td>{airport.name}</td>
                   <td>{airport.location}</td>
-                  {/* Add more table data cells if needed */}
                 </tr>
               ))}
             </tbody>
@@ -168,8 +162,6 @@ function SearchFlight() {
           </table>
         </div>
       )}
-
-      {/* Conditional rendering of BookFlight */}
       {cart.length > 0 && (
         <BookFlight flights={cart} removeFromCart={removeFromCart} />
       )}

@@ -5,22 +5,20 @@
 # Remote library imports
 from flask import request, session, jsonify, Response
 from flask_restful import Resource
-import json, random, string
+import json, random
 from sqlalchemy_serializer import SerializerMixin
 
 # Local imports
 from config import app, db, api
 # Add your model imports
-from models import Airport, User, Flight, Booking, Payment
+from models import Airport, User, Flight, Booking
 
 # Views go here!
 
 class AirportSearch(Resource):
     def get(self):
-        # Retrieve the list of all airports (or whatever your desired logic is)
         airports = Airport.query.all()
 
-        # Serialize airport data into a list of dictionaries
         airport_data = [{
             "id": airport.id,
             "name": airport.name,
@@ -28,7 +26,6 @@ class AirportSearch(Resource):
             "state": airport.state
         } for airport in airports]
 
-        # Return the serialized data as a JSON response
         return airport_data, 200
 
 
@@ -36,7 +33,7 @@ class UserProfile(Resource):
     def get(self):
         user_id = session.get('user_id')
         if user_id is not None:
-            user = User.query.filter_by(id=user_id).first()  # Use filter_by to retrieve the user
+            user = User.query.filter_by(id=user_id).first()
             if user:
                 user_data = {
                     'user_id': user.id,
@@ -45,7 +42,7 @@ class UserProfile(Resource):
                     'last_name': user.last_name,
                     'email': user.email,
                 }
-                response_data = json.dumps(user_data)  # Serialize data using json.dumps
+                response_data = json.dumps(user_data) 
                 return Response(response=response_data, status=200, content_type="application/json")
         return Response(response=json.dumps({'error': 'Unauthorized'}), status=401, content_type="application/json")
 
@@ -64,11 +61,10 @@ class Signup(Resource):
             return Response(response=json.dumps({"error": "422 Unprocessable Entity"}),
                             status=422, content_type="application/json")
 
-        # Create a new User instance with the provided arguments
         user = User(
             username=username,
             email=email,
-            password=password,  # Provide the password
+            password=password,
             first_name=first_name,
             last_name=last_name
         )
@@ -136,24 +132,19 @@ class Logout(Resource):
 
 class FlightSearch(Resource):
     def post(self):
-        # Get the JSON data from the request
+        
         search_data = request.get_json()
-        # Extract search criteria (city name)
         city_name = search_data.get('city')
         
-        # Retrieve all airports and filter by city
         airports = Airport.query.filter_by(city=city_name).all()
-
-        # Get the IDs of airports in the specified city
+        
         airport_ids_in_city = [airport.id for airport in airports]
 
-        # Retrieve flights that depart from or arrive at airports in the specified city
         matching_flights = Flight.query.filter(
             (Flight.departure_airport_id.in_(airport_ids_in_city)) |
             (Flight.destination_airport_id.in_(airport_ids_in_city))
         ).all()
 
-        # Create a list of dictionaries from matching_flights
         flight_data = []
         for flight in matching_flights:
             flight_dict = {
@@ -180,7 +171,7 @@ class BookingFlight(Resource):
             return {"message": "No data provided or data is not in the expected format"}, 400
 
         try:
-            # Create a list to store the Booking instances
+            
             bookings = []
 
             for booking_data in data:
@@ -189,7 +180,6 @@ class BookingFlight(Resource):
                 order_number = booking_data.get("order_number")
                 order_status = booking_data.get("order_status")
 
-                # Create a Booking instance for each booking in the array
                 booking = Booking(
                     user_id=user_id,
                     flight_id=flight_id,
@@ -197,26 +187,16 @@ class BookingFlight(Resource):
                     order_status=order_status
                 )
 
-                # Add the Booking instance to the list of bookings
                 bookings.append(booking)
 
-            # Add all the booking instances to the database session
             db.session.add_all(bookings)
 
-            # Commit the changes to the database
             db.session.commit()
 
             return {"message": "Booking(s) created successfully"}, 201
 
         except Exception as e:
-            # Handle any potential exceptions here
             return {"message": f"An error occurred: {str(e)}"}, 500
-
-# def get_user_id():
-#     # Replace this with your logic to retrieve the user's ID.
-#     # You may use Flask-Login or another method to get the current user's ID.
-#     # For example, if using Flask-Login, you can use current_user.id.
-#     return current_user.id
 
 # Resource Routes
 api.add_resource(UserProfile, '/api/users/profile')

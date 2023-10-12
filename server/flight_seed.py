@@ -1,7 +1,7 @@
 import random
 from datetime import datetime, timedelta
 from decimal import Decimal
-from app import app  # Assuming you have your Flask app instance defined in 'app.py'
+from app import app
 from models import db, Flight, Airport
 
 if __name__ == '__main__':
@@ -11,7 +11,6 @@ if __name__ == '__main__':
         
         num_flights = 20
 
-        # Get the list of all airports from the database
         airports = Airport.query.all()
 
         

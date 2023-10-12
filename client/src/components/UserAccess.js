@@ -63,7 +63,6 @@ function UserAccess({ onSignIn, onSignUp }) {
       if (response.ok) {
         const userData = await response.json();
         setIsRegistered(true);
-        // Redirect to userdatadisplay with user data
         history.push('/profile', { userData });
       } else {
         setInputError(true);
@@ -90,7 +89,7 @@ function UserAccess({ onSignIn, onSignUp }) {
         setLastName('');
         setEmail('');
         setInputError(false);
-        history.push('/signin'); // Redirect to the sign-in page
+        history.push('/signin');
       } else {
         console.error('Error signing out:', response.statusText);
       }

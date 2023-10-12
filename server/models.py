@@ -66,15 +66,13 @@ class Flight(db.Model, SerializerMixin):
     price = db.Column(db.Float, nullable=False)
     
 
-    # Establish a many-to-one relationship with the departure airport
+   
     departure_airport_id = db.Column(db.Integer, db.ForeignKey('airports.id'), nullable=False)
     departure_airport = db.relationship('Airport', foreign_keys=[departure_airport_id], backref='departing_flights')
 
-    # Establish a many-to-one relationship with the destination airport
     destination_airport_id = db.Column(db.Integer, db.ForeignKey('airports.id'), nullable=False)
     destination_airport = db.relationship('Airport', foreign_keys=[destination_airport_id], backref='arriving_flights')
 
-    # Establish a one-to-many relationship with bookings
     bookings = db.relationship('Booking', backref='flight', lazy=True)
 
     def __repr__(self):

@@ -33,9 +33,6 @@ api = Api(app)
 # Instantiate CORS
 CORS(app)
 
-# @app.route("/")
-# def helloWorld():
-#   return "Hello, cross-origin-world!"
 
 bcrypt = Bcrypt(app)
 
